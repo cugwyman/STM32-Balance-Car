@@ -8,11 +8,8 @@
 #define Kalman_Sample_Time   0.005
 #define AC_PID_P             360//360//1000//600//        520//500//
 #define AC_PID_D             42//33//8//20//45//39//           42///38////55//45//6//
-#define GYRO_ZERO_SAMPLE     1000
 
 /* Speed */
-#define VC_Set               50
-
 #define VC_PID_P             45//72//120//               85//90//60//210//250//250//90//
 #define VC_PID_I             0.2//0.1//1//2//2//   0.25
 #define VC_PID_D             10//20//22//25//                   6//8//10//5//50//3//50//25
@@ -45,7 +42,7 @@
 /* byte is 8 (2^3) bits */
 #define  SHIFT  3
 /* make the after-shifted bit no more than 1 << 0x07 */
-#define  MASK   0x07
+//#define  MASK   0x07
 
 #define  IMG_ROW    50
 #define  IMG_COL    225

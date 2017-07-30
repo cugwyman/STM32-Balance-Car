@@ -1,6 +1,5 @@
 #include "encoder.h"
 
-
 /***********************************************************
       编码器接口模式 ， 速度检测与方向检测TIM2/4用于编码模式
       PA0(TIM2_CH1)接；PA1(TIM2_CH2)接
@@ -17,9 +16,9 @@ void TIM2_Configuration(void)
 	
 	//GPIO配置PA0,PA1
 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);   //使能PA端口时钟
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_1;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_2;
 	//GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  //PA0、PA1 浮空输入
+	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  //PA0、PA2 浮空输入
 	GPIO_Init(GPIOA,&GPIO_InitStructure);
 	
 	//TIM2编码模式
@@ -28,7 +27,7 @@ void TIM2_Configuration(void)
   	/* Time Base configuration */
     TIM_TimeBaseStructure.TIM_Prescaler = 0; 	  			//不分频
 	TIM_TimeBaseStructure.TIM_Period = 0xFFFF;   			//设置计数器溢出后的重载初值
-	TIM_TimeBaseInit(TIM5, &TIM_TimeBaseStructure); 		//用以上参数初始化定时器时间基础模块		
+	TIM_TimeBaseInit(TIM2, &TIM_TimeBaseStructure); 		//用以上参数初始化定时器时间基础模块		
 
 	TIM_Cmd(TIM2, ENABLE); 	//使能定时器2
 }
@@ -43,7 +42,7 @@ void TIM2_Encoder_Write(int data)
 int TIM2_Encoder_Read(void)
 { 
 	s16 data;
-	data=(s16)(TIM_GetCounter(TIM5));
+	data=(s16)(TIM_GetCounter(TIM2));
 	return (int)data;
 }
 

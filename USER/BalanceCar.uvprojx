@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\MPU6050;..\USMART;..\HARDWARE\MOTOR;..\HARDWARE\ENCODER;..\DOCUMENTS;..\HARDWARE\TIMER;..\HARDWARE\CONTROL</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\MPU6050;..\USMART;..\HARDWARE\MOTOR;..\HARDWARE\ENCODER;..\DOCUMENTS;..\HARDWARE\TIMER;..\HARDWARE\CONTROL;..\HARDWARE\MODESWITCH;..\HARDWARE\OLED;..\HARDWARE\INFRARED</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -454,6 +454,21 @@
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\CONTROL\control.c</FilePath>
             </File>
+            <File>
+              <FileName>mode_switch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\mode_switch.c</FilePath>
+            </File>
+            <File>
+              <FileName>OLED.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\OLED\OLED.c</FilePath>
+            </File>
+            <File>
+              <FileName>infrared.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\INFRARED\infrared.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -558,6 +573,16 @@
               <FileName>README.txt</FileName>
               <FileType>5</FileType>
               <FilePath>..\DOCUMENTS\README.txt</FilePath>
+            </File>
+            <File>
+              <FileName>Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\DOCUMENTS\Config.h</FilePath>
+            </File>
+            <File>
+              <FileName>TypeDef.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>..\DOCUMENTS\TypeDef.h</FilePath>
             </File>
           </Files>
         </Group>

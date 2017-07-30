@@ -11,164 +11,67 @@
 #include "pwm.h"
 #include "encoder.h"
 #include "timer.h"
+#include "mode_switch.h"
+#include "OLED.h"
+#include "infrared.h"
 
+/**********************************************
+ *   
+ *      STM32 Balance Car 平衡车 V1.2
+ *               2017.7.30
+ *     CUG     Wyman    名字你们自己加
+ *          
+ *     IDE              Keil MDK V5.23
+ *     MCU              STM32F103ZET6
+ *     Attitude transducer     MPU6050
+ *     Motor drivers    BTN
+ *     Motor            DC motor
+ *     
+ *     To be added      CCD, Keyboard...
+ *
+ **********************************************/
  
-/************************************************
-*
-*   TO DO:6050零点，直立控制
-*
-************************************************/
+/**********************************************
+ *
+ *  2017.7.29   V1.0
+ *  
+ *  1.外设均在HARDWARE文件夹,控制control.c暂时也放在此，参数、开关等h文件在DOCUMENT文件夹
+ *  2.全局变量统一在其定义处的C文件自身的h文件处进行外部引用，
+ *  3.6050暂时通过硬件I2C直接读取DMP
+ *  4.引脚安排在README.txt
+ *
+ *  2017.7.29   V1.1
+ *  
+ *  1.直立控制已加入，具体函数在control.c,实现在timer.c
+ *
+ *  2017.7.30   V1.2
+ *  
+ *  1.add OLED module
+ *  2.add infrared module 红外循迹模块ST118
+ *  3.connect ir and direction_PID  目前方向环根据红外循迹控制
+ *
+ **********************************************/
 
  	
  int main(void)
  {	 
-//	u8 t=0,report=1;			//默认开启上报
-//	u8 key;
-	float pitch,roll,yaw; 		//欧拉角
-	short aacx,aacy,aacz;		//加速度传感器原始数据
-	short gyrox,gyroy,gyroz;	//陀螺仪原始数据
-//	short temp;					//温度	
-	 
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);	 //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
+    mode_init();
 	uart_init(115200);	 	//参考风力摆发送
 	delay_init();	//延时初始化 
 //	usmart_dev.init(72);		//初始化USMART
 	LED_Init();		  			//初始化与LED连接的硬件接口
 	KEY_Init();					//初始化按键
-	LCD_Init();			   		//初始化LCD  ,用OLED,A2345
+    OLED_Init();        
+    infrared_init();
 	PWM_Init(4800-1,3-1);	    //PWM频率=72000000/4800/3=5Khz  clk/(arr+1)/(psc+1)=freq,arr为占空比计算的分母
     ENCODER_Init();
 	MPU_Init();					//初始化MPU6050
     TIMER_Init(50-1,7200-1);      //5ms定时中断
  	while(1)
 	{
-//		key=KEY_Scan(0);
-//		if(key==KEY0_PRES)
-//		{
-//			report=!report;
-//		}
-		if(mpu_dmp_get_data(&pitch,&roll,&yaw)==0)
-		{ 
-//			temp=MPU_Get_Temperature();	//得到温度值
-			MPU_Get_Accelerometer(&aacx,&aacy,&aacz);	//得到加速度传感器数据
-			MPU_Get_Gyroscope(&gyrox,&gyroy,&gyroz);	//得到陀螺仪数据
-//			if(report)mpu6050_send_data(aacx,aacy,aacz,gyrox,gyroy,gyroz);//用自定义帧发送加速度和陀螺仪原始数据
-//			if(report)usart1_report_imu(aacx,aacy,aacz,gyrox,gyroy,gyroz,(int)(roll*100),(int)(pitch*100),(int)(yaw*10));
-//			if((t%10)==0)
-//			{ 
-//				if(temp<0)
-//				{
-//					LCD_ShowChar(30+48,200,'-',16,0);		//显示负号
-//					temp=-temp;		//转为正数
-//				}else LCD_ShowChar(30+48,200,' ',16,0);		//去掉负号 
-//				LCD_ShowNum(30+48+8,200,temp/100,3,16);		//显示整数部分	    
-//				LCD_ShowNum(30+48+40,200,temp%10,1,16);		//显示小数部分 
-//				temp=pitch*10;
-//				if(temp<0)
-//				{
-//					LCD_ShowChar(30+48,220,'-',16,0);		//显示负号
-//					temp=-temp;		//转为正数
-//				}else LCD_ShowChar(30+48,220,' ',16,0);		//去掉负号 
-//				LCD_ShowNum(30+48+8,220,temp/10,3,16);		//显示整数部分	    
-//				LCD_ShowNum(30+48+40,220,temp%10,1,16);		//显示小数部分 
-//				temp=roll*10;
-//				if(temp<0)
-//				{
-//					LCD_ShowChar(30+48,240,'-',16,0);		//显示负号
-//					temp=-temp;		//转为正数
-//				}else LCD_ShowChar(30+48,240,' ',16,0);		//去掉负号 
-//				LCD_ShowNum(30+48+8,240,temp/10,3,16);		//显示整数部分	    
-//				LCD_ShowNum(30+48+40,240,temp%10,1,16);		//显示小数部分 
-//				temp=yaw*10;
-//				if(temp<0)
-//				{
-//					LCD_ShowChar(30+48,260,'-',16,0);		//显示负号
-//					temp=-temp;		//转为正数
-//				}else LCD_ShowChar(30+48,260,' ',16,0);		//去掉负号 
-//				LCD_ShowNum(30+48+8,260,temp/10,3,16);		//显示整数部分	    
-//				LCD_ShowNum(30+48+40,260,temp%10,1,16);		//显示小数部分  
-//				t=0;
-//				LED0=!LED0;//LED闪烁
-//			}
-		}
-//		t++; 
+        BlackLine();//显示黑线的情况
+
 	} 	
 }
- 
-
-//串口1发送1个字符 
-//c:要发送的字符
-void usart1_send_char(u8 c)
-{   	
-	while(USART_GetFlagStatus(USART1,USART_FLAG_TC)==RESET); //循环发送,直到发送完毕   
-	USART_SendData(USART1,c);  
-} 
-//传送数据给匿名四轴上位机软件(V2.6版本)
-//fun:功能字. 0XA0~0XAF
-//data:数据缓存区,最多28字节!!
-//len:data区有效数据个数
-void usart1_niming_report(u8 fun,u8*data,u8 len)
-{
-	u8 send_buf[32];
-	u8 i;
-	if(len>28)return;	//最多28字节数据 
-	send_buf[len+3]=0;	//校验数置零
-	send_buf[0]=0X88;	//帧头
-	send_buf[1]=fun;	//功能字
-	send_buf[2]=len;	//数据长度
-	for(i=0;i<len;i++)send_buf[3+i]=data[i];			//复制数据
-	for(i=0;i<len+3;i++)send_buf[len+3]+=send_buf[i];	//计算校验和	
-	for(i=0;i<len+4;i++)usart1_send_char(send_buf[i]);	//发送数据到串口1 
-}
-//发送加速度传感器数据和陀螺仪数据
-//aacx,aacy,aacz:x,y,z三个方向上面的加速度值
-//gyrox,gyroy,gyroz:x,y,z三个方向上面的陀螺仪值
-void mpu6050_send_data(short aacx,short aacy,short aacz,short gyrox,short gyroy,short gyroz)
-{
-	u8 tbuf[12]; 
-	tbuf[0]=(aacx>>8)&0XFF;
-	tbuf[1]=aacx&0XFF;
-	tbuf[2]=(aacy>>8)&0XFF;
-	tbuf[3]=aacy&0XFF;
-	tbuf[4]=(aacz>>8)&0XFF;
-	tbuf[5]=aacz&0XFF; 
-	tbuf[6]=(gyrox>>8)&0XFF;
-	tbuf[7]=gyrox&0XFF;
-	tbuf[8]=(gyroy>>8)&0XFF;
-	tbuf[9]=gyroy&0XFF;
-	tbuf[10]=(gyroz>>8)&0XFF;
-	tbuf[11]=gyroz&0XFF;
-	usart1_niming_report(0XA1,tbuf,12);//自定义帧,0XA1
-}	
-//通过串口1上报结算后的姿态数据给电脑
-//aacx,aacy,aacz:x,y,z三个方向上面的加速度值
-//gyrox,gyroy,gyroz:x,y,z三个方向上面的陀螺仪值
-//roll:横滚角.单位0.01度。 -18000 -> 18000 对应 -180.00  ->  180.00度
-//pitch:俯仰角.单位 0.01度。-9000 - 9000 对应 -90.00 -> 90.00 度
-//yaw:航向角.单位为0.1度 0 -> 3600  对应 0 -> 360.0度
-void usart1_report_imu(short aacx,short aacy,short aacz,short gyrox,short gyroy,short gyroz,short roll,short pitch,short yaw)
-{
-	u8 tbuf[28]; 
-	u8 i;
-	for(i=0;i<28;i++)tbuf[i]=0;//清0
-	tbuf[0]=(aacx>>8)&0XFF;
-	tbuf[1]=aacx&0XFF;
-	tbuf[2]=(aacy>>8)&0XFF;
-	tbuf[3]=aacy&0XFF;
-	tbuf[4]=(aacz>>8)&0XFF;
-	tbuf[5]=aacz&0XFF; 
-	tbuf[6]=(gyrox>>8)&0XFF;
-	tbuf[7]=gyrox&0XFF;
-	tbuf[8]=(gyroy>>8)&0XFF;
-	tbuf[9]=gyroy&0XFF;
-	tbuf[10]=(gyroz>>8)&0XFF;
-	tbuf[11]=gyroz&0XFF;	
-	tbuf[18]=(roll>>8)&0XFF;
-	tbuf[19]=roll&0XFF;
-	tbuf[20]=(pitch>>8)&0XFF;
-	tbuf[21]=pitch&0XFF;
-	tbuf[22]=(yaw>>8)&0XFF;
-	tbuf[23]=yaw&0XFF;
-	usart1_niming_report(0XAF,tbuf,28);//飞控显示帧,0XAF
-}  
 
