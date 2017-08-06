@@ -145,49 +145,60 @@ s16 get_ir_dir_error(u8 state)
 			}
 			break;					
 	}
+    return error;
 }
 
 void BlackLine(void)
 {
 	if(ST188LL)
 		{
-			OLED_P6x8Str(20,4,"1");
+//			OLED_P6x8Str(20,4,"1");
+            OLED_ShowChar(20,4,1,16);
 		}
 		else
 		{
-			OLED_P6x8Str(20,4,"0");
+//			OLED_P6x8Str(20,4,"0");
+            OLED_ShowChar(20,4,1,16);
 		}
 		if(ST188L)
 		{
-			OLED_P6x8Str(40,4,"1");
+//			OLED_P6x8Str(40,4,"1");
+            OLED_ShowChar(20,4,1,16);
 		}
 		else
 		{
-			OLED_P6x8Str(40,4,"0");
+//			OLED_P6x8Str(40,4,"0");
+            OLED_ShowChar(20,4,1,16);
 		}
 		if(ST188M)
 		{
-			OLED_P6x8Str(60,4,"1");
+//			OLED_P6x8Str(60,4,"1");
+            OLED_ShowChar(20,4,1,16);
 		}
 		else
 		{
-			OLED_P6x8Str(60,4,"0");
+//			OLED_P6x8Str(60,4,"0");
+            OLED_ShowChar(20,4,1,16);
 		}
 		if(ST188R)
 		{
-			OLED_P6x8Str(80,4,"1");
+//			OLED_P6x8Str(80,4,"1");
+            OLED_ShowChar(20,4,1,16);
 		}
 		else
 		{
-			OLED_P6x8Str(80,4,"0");
+//			OLED_P6x8Str(80,4,"0");
+            OLED_ShowChar(20,4,1,16);
 		}
 		if(ST188RR)
 		{
-			OLED_P6x8Str(100,4,"1");
+//			OLED_P6x8Str(100,4,"1");
+            OLED_ShowChar(20,4,1,16);
 		}
 		else
 		{
-			OLED_P6x8Str(100,4,"0");
+//			OLED_P6x8Str(100,4,"0");
+            OLED_ShowChar(20,4,1,16);
 		}
 }
 

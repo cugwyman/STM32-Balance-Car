@@ -96,8 +96,8 @@
 //#define MPU_READ    0XD1
 //#define MPU_WRITE   0XD0
 
-extern float pitch_zero, roll_zero, yaw_zero; 		//欧拉角零点
-extern short gyrox_zero, gyroy_zero, gyroz_zero;	//陀螺仪零点
+//extern float pitch_zero, roll_zero, yaw_zero; 		//欧拉角零点
+//extern short gyrox_zero, gyroy_zero, gyroz_zero;	//陀螺仪零点
 
 
 void MPU_Init(void); 								//初始化MPU6050

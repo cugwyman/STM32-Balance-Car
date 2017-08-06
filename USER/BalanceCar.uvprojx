@@ -335,7 +335,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_HD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\MPU6050;..\USMART;..\HARDWARE\MOTOR;..\HARDWARE\ENCODER;..\DOCUMENTS;..\HARDWARE\TIMER;..\HARDWARE\CONTROL;..\HARDWARE\MODESWITCH;..\HARDWARE\OLED;..\HARDWARE\INFRARED</IncludePath>
+              <IncludePath>..\HARDWARE\LED;..\SYSTEM\delay;..\SYSTEM\sys;..\SYSTEM\usart;..\USER;..\STM32F10x_FWLib\inc;..\CORE;..\HARDWARE\KEY;..\HARDWARE\LCD;..\HARDWARE\MPU6050\eMPL;..\HARDWARE\MPU6050;..\USMART;..\HARDWARE\MOTOR;..\HARDWARE\ENCODER;..\DOCUMENTS;..\HARDWARE\TIMER;..\HARDWARE\CONTROL;..\HARDWARE\MODESWITCH;..\HARDWARE\OLED;..\HARDWARE\INFRARED;..\HARDWARE\OscilloScope;..\HARDWARE\KEY4x4;..\HARDWARE\EXTI;..\HARDWARE\IDENTIFY</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -410,11 +410,6 @@
               <FilePath>..\HARDWARE\KEY\key.c</FilePath>
             </File>
             <File>
-              <FileName>lcd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\HARDWARE\LCD\lcd.c</FilePath>
-            </File>
-            <File>
               <FileName>mpuiic.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\MPU6050\mpuiic.c</FilePath>
@@ -468,6 +463,26 @@
               <FileName>infrared.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\HARDWARE\INFRARED\infrared.c</FilePath>
+            </File>
+            <File>
+              <FileName>OscilloScope.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\OscilloScope\OscilloScope.c</FilePath>
+            </File>
+            <File>
+              <FileName>key4x4.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\KEY4x4\key4x4.c</FilePath>
+            </File>
+            <File>
+              <FileName>EXTI.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\EXTI\EXTI.c</FilePath>
+            </File>
+            <File>
+              <FileName>road_identify.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\HARDWARE\IDENTIFY\road_identify.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -539,25 +554,10 @@
               <FileType>1</FileType>
               <FilePath>..\STM32F10x_FWLib\src\stm32f10x_tim.c</FilePath>
             </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>USMART</GroupName>
-          <Files>
             <File>
-              <FileName>usmart.c</FileName>
+              <FileName>stm32f10x_exti.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\USMART\usmart.c</FilePath>
-            </File>
-            <File>
-              <FileName>usmart_config.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USMART\usmart_config.c</FilePath>
-            </File>
-            <File>
-              <FileName>usmart_str.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\USMART\usmart_str.c</FilePath>
+              <FilePath>..\STM32F10x_FWLib\src\stm32f10x_exti.c</FilePath>
             </File>
           </Files>
         </Group>

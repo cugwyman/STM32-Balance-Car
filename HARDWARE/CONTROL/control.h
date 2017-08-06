@@ -9,6 +9,7 @@
 #include "mode_switch.h"
 #include "encoder.h"
 #include "infrared.h"
+#include "usart.h"
 
 #include "Param.h"
 #include "Config.h"
@@ -16,8 +17,8 @@
 
 extern mode MODE;
 
-extern float pitch; 		
-extern short gyroy, gyroz;
+extern float pitch, roll, yaw; 		
+extern short groyx, gyroy, gyroz;
 extern int speed;
 extern int16_t state;//·½ÏòÆ«²î
 extern int32_t ac_pwm, vc_pwm, dc_pwm, left_pwm, right_pwm;

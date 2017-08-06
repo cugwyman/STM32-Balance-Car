@@ -15,11 +15,11 @@ void TIM2_Configuration(void)
 	TIM_DeInit(TIM2); 	//TIM2初始化
 	
 	//GPIO配置PA0,PA1
-	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);   //使能PA端口时钟
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0|GPIO_Pin_2;
+	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB,ENABLE);   //使能PA端口时钟
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_8|GPIO_Pin_9;
 	//GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IN_FLOATING;  //PA0、PA2 浮空输入
-	GPIO_Init(GPIOA,&GPIO_InitStructure);
+	GPIO_Init(GPIOB,&GPIO_InitStructure);
 	
 	//TIM2编码模式
 	TIM_EncoderInterfaceConfig(TIM2,TIM_EncoderMode_TI12,TIM_ICPolarity_Rising,TIM_ICPolarity_Rising);

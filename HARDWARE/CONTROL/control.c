@@ -1,7 +1,7 @@
 #include "control.h"
 
-float pitch; 		
-short gyroy, gyroz;
+float pitch, roll, yaw; 		
+short groyx, gyroy, gyroz;
 int speed;
 int16_t state;//方向偏差
 int32_t ac_pwm, vc_pwm, dc_pwm, left_pwm, right_pwm;
@@ -30,14 +30,18 @@ void get_pwm(void)
  ***/
 void get_mpu(void)
 {
-    float pitch_temp=0, roll_temp=0, yaw_temp=0; 	//欧拉角零点
-    short gyrox_temp=0, gyroy_temp=0, gyroz_temp=0;	//陀螺仪零点
+//    float pitch_temp, roll_temp, yaw_temp; 	
+//    short gyrox_temp, gyroy_temp, gyroz_temp;	
 
-    mpu_dmp_get_data(&pitch_temp, &roll_temp, &yaw_temp);
-    MPU_Get_Gyroscope(&gyrox_temp, &gyroy_temp, &gyroz_temp);	//得到陀螺仪数据
-    pitch = pitch_temp - pitch_zero;
-    gyroy = gyroy_temp - gyroy_zero;
-    gyroz = gyroz_temp - gyroz_zero;
+//    while
+        (mpu_dmp_get_data(&pitch, &roll, &yaw));
+    {
+//        printf("DMPREADunsucceed\n");
+    }
+    MPU_Get_Gyroscope(&groyx, &gyroy, &gyroz);	//得到陀螺仪数据
+//    pitch = pitch_temp - pitch_zero;
+//    gyroy = gyroy_temp - gyroy_zero;
+//    gyroz = gyroz_temp - gyroz_zero;
 }
 
 /***

@@ -2958,6 +2958,7 @@ u8 mpu_dmp_init(void)
 	MPU_IIC_Init(); 	//初始化IIC总线
 	if(mpu_init()==0)	//初始化MPU6050
 	{	 
+
 		res=mpu_set_sensors(INV_XYZ_GYRO|INV_XYZ_ACCEL);//设置所需要的传感器
 		if(res)return 1; 
 		res=mpu_configure_fifo(INV_XYZ_GYRO|INV_XYZ_ACCEL);//设置FIFO
@@ -2994,6 +2995,7 @@ u8 mpu_dmp_get_data(float *pitch,float *roll,float *yaw)
 	short gyro[3], accel[3], sensors;
 	unsigned char more;
 	long quat[4]; 
+//    printf("dmp1\n");
 	if(dmp_read_fifo(gyro, accel, quat, &sensor_timestamp, &sensors,&more))return 1;	 
 	/* Gyro and accel data are written to the FIFO by the DMP in chip frame and hardware units.
 	 * This behavior is convenient because it keeps the gyro and accel outputs of dmp_read_fifo and mpu_read_fifo consistent.
@@ -3005,6 +3007,7 @@ u8 mpu_dmp_get_data(float *pitch,float *roll,float *yaw)
 	/* Unlike gyro and accel, quaternions are written to the FIFO in the body frame, q30.
 	 * The orientation is set by the scalar passed to dmp_set_orientation during initialization. 
 	**/
+//    printf("dmp2\n");
 	if(sensors&INV_WXYZ_QUAT) 
 	{
 		q0 = quat[0] / q30;	//q30格式转换为浮点数
@@ -3013,9 +3016,11 @@ u8 mpu_dmp_get_data(float *pitch,float *roll,float *yaw)
 		q3 = quat[3] / q30; 
 		//计算得到俯仰角/横滚角/航向角
 		*pitch = asin(-2 * q1 * q3 + 2 * q0* q2)* 57.3;	// pitch
-		*roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.3;	// roll
-		*yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;	//yaw
-	}else return 2;
+//		*roll  = atan2(2 * q2 * q3 + 2 * q0 * q1, -2 * q1 * q1 - 2 * q2* q2 + 1)* 57.3;	// roll
+//		*yaw   = atan2(2*(q1*q2 + q0*q3),q0*q0+q1*q1-q2*q2-q3*q3) * 57.3;	//yaw
+	}
+    else return 2;
+//    printf("dmp0\n");
 	return 0;
 }
 

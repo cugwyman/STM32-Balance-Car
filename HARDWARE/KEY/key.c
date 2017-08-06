@@ -1,56 +1,170 @@
-#include "stm32f10x.h"
 #include "key.h"
-#include "sys.h" 
-#include "delay.h"
-//////////////////////////////////////////////////////////////////////////////////	 
-//本程序只供学习使用，未经作者许可，不得用于其它任何用途
-//ALIENTEK精英STM32开发板
-//按键驱动代码	   
-//正点原子@ALIENTEK
-//技术论坛:www.openedv.com
-//修改日期:2012/9/3
-//版本：V1.0
-//版权所有，盗版必究。
-//Copyright(C) 广州市星翼电子科技有限公司 2009-2019
-//All rights reserved									  
-//////////////////////////////////////////////////////////////////////////////////  
-								    
-//按键初始化函数
-void KEY_Init(void) //IO初始化
-{ 
- 	GPIO_InitTypeDef GPIO_InitStructure;
- 
- 	RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA|RCC_APB2Periph_GPIOE,ENABLE);//使能PORTA,PORTE时钟
+#include "oled.h"
 
-	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_4|GPIO_Pin_3;//KEY0-KEY1
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU; //设置成上拉输入
- 	GPIO_Init(GPIOE, &GPIO_InitStructure);//初始化GPIOE4,3
+uint8_t Item = 0;
+uint8_t Param = 1;
 
-	//初始化 WK_UP-->GPIOA.0	  下拉输入
-	GPIO_InitStructure.GPIO_Pin  = GPIO_Pin_0;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPD; //PA0设置成输入，默认下拉	  
-	GPIO_Init(GPIOA, &GPIO_InitStructure);//初始化GPIOA.0
-
+void Key_IO_Init(void)	 //按键IO配置
+{
+    GPIO_InitTypeDef IO_Init;
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOE , ENABLE);	
+    IO_Init.GPIO_Pin = GPIO_Pin_0 | GPIO_Pin_1 | GPIO_Pin_2 | GPIO_Pin_3 | GPIO_Pin_5;				    
+    IO_Init.GPIO_Mode = GPIO_Mode_IPD;	
+    GPIO_Init(GPIOE, &IO_Init);
 }
-//按键处理函数
-//返回按键值
-//mode:0,不支持连续按;1,支持连续按;
-//0，没有任何按键按下
-//1，KEY0按下
-//2，KEY1按下
-//3，KEY3按下 WK_UP
-//注意此函数有响应优先级,KEY0>KEY1>KEY_UP!!
-u8 KEY_Scan(u8 mode)
-{	 
-	static u8 key_up=1;//按键按松开标志
-	if(mode)key_up=1;  //支持连按		  
-	if(key_up&&(KEY0==0||KEY1==0||WK_UP==1))
+
+void KeyScan(void)
+{
+//        printf("scan\n");
+	
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0) == KEY_PRESSED) //K1
+	{	
+//        OLED_Clear();
+        printf("add\n");
+		switch(Item)
+		{
+			case 1:
+                if(Param==1)		//共有4行
+                    MODE.DC_PID_P_COEF += 1;
+                if(Param==3)		//共有4行
+                    MODE.DC_PID_D += 1;
+				   break; 
+//			case 2:R+=5.0;
+//				   if(R >= 35.0) R = 35.0;
+//				   sprintf(buf,"DS16(6,60,'设置长度:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);	
+//			       break;  //第2问按下S4增加距离
+
+//			case 3:angle+=10.0;
+//				   if(angle >= 180.0) 
+//				   	  angle = 180.0;
+//				   sprintf(buf,"DS16(6,80,'设置角度:%.1f ',10)\r\n",angle);
+//				   GpuSend(buf);	
+//			       break;  //第3问按下S4增加角度;  
+//			
+//			case 5:R+=5.0;
+//				   if(R >= 35.0) R = 35.0;
+//				   sprintf(buf,"DS16(6,100,'设置半径:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);
+//				   break;
+
+//			case 6:R+=5.0;
+//				   if(R >= 35.0) R = 35.0;
+//				   sprintf(buf,"DS16(6,100,'设置半径:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);
+//				   break;
+//				   
+
+			default:break;
+		}				
+	}
+
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1) == KEY_PRESSED) //K2
 	{
-		delay_ms(10);//去抖动 
-		key_up=0;
-		if(KEY0==0)return KEY0_PRES;
-		else if(KEY1==0)return KEY1_PRES;
-		else if(WK_UP==1)return WKUP_PRES;
-	}else if(KEY0==1&&KEY1==1&&WK_UP==0)key_up=1; 	    
- 	return 0;// 无按键按下
+//        OLED_Clear();
+        printf("sub\n");
+		switch(Item)
+		{
+			case 1:
+                if(Param==1)		//共有4行
+                    MODE.DC_PID_P_COEF -= 1;
+                if(Param==3)		//共有4行
+                    MODE.DC_PID_D -= 1;
+           
+				   break; 
+//			case 2:R-=5.0;
+//				   if(R <= 15.0) R = 15.0;
+//				   sprintf(buf,"DS16(6,60,'设置长度:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);	
+//			       break;  //第2问按下S4增加距离
+
+//			case 3:angle-=10.0;
+//				   if(angle <= 0.0) 
+//				   	  angle = 0.0;
+//				   sprintf(buf,"DS16(6,80,'设置角度:%.1f ',10)\r\n",angle);
+//				   GpuSend(buf);	
+//			       break;  //第3问按下S4增加角度;  
+//			
+//			case 5:R-=5.0;
+//				   if(R <= 15.0) R = 15.0;
+//				   sprintf(buf,"DS16(6,100,'设置半径:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);
+//				   break;
+
+//			case 6:R-=5.0;
+//				   if(R <= 15.0) R = 15.0;
+//				   sprintf(buf,"DS16(6,100,'设置半径:%.1f ',10)\r\n",R);
+//				   GpuSend(buf);
+//				   break;
+//				   
+
+			default:break;
+		}		
+	}
+	
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2) == KEY_PRESSED) //K3
+	{
+//        OLED_Clear();
+        printf("last\n");
+        Param--;
+        if(Param<1)		//共有3行
+            Param = 3;
+//        OLED_Clear();
+//		switch(Item)
+//		{
+//			case 1:Q1_Start = 1;
+//				   sprintf(buf,"DS16(6,120,'开始!',10)\r\n");
+//				   GpuSend(buf);
+//				   break; 
+
+//			case 2:Q2_Start = 1;
+//				   sprintf(buf,"DS16(6,120,'开始!',10)\r\n");
+//				   GpuSend(buf);
+//				   break;
+
+//			case 3:Q3_Start = 1;
+//				   sprintf(buf,"DS16(6,120,'开始!',10)\r\n");
+//				   GpuSend(buf);
+//				   break;  
+
+//			case 4:Q4_Start = 1;
+//				   sprintf(buf,"DS16(6,120,'开始!',10)\r\n");
+//				   GpuSend(buf);break;
+//				   
+//			case 5:Q5_Start = 1;
+//				   RoundDir = !RoundDir;
+//				   if(RoundDir == 1)
+//			       	   sprintf(buf,"DS16(6,120,'顺时针旋转!',10)\r\n");
+//				   else
+//				   	   sprintf(buf,"DS16(6,120,'逆时针旋转!',10)\r\n");
+//				   GpuSend(buf);break;
+//				   
+//			case 6:Q6_Start = 1;	       
+//			       sprintf(buf,"DS16(6,120,'开始!',10)\r\n");
+//				   GpuSend(buf);break;   
+
+//			default:break;
+//		}	
+	} 	
+
+    if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3) == KEY_PRESSED)  //K4
+	{
+//        OLED_Clear();
+        printf("next\n");
+        Param++;
+        if(Param>3)		//共有3行
+            Param = 1;
+    }
+    
+	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5) == KEY_PRESSED)  //K4
+	{
+        OLED_Clear();
+        printf("another\n");
+		Item++;
+		if(Item>6)		//共有7项
+			Item = 0;
+//		sprintf(buf,"DS16(6,40,'第%d问',10)\r\n",Item);
+//		GpuSend(buf);
+	}
 }
+

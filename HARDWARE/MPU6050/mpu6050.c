@@ -16,8 +16,8 @@
 //All rights reserved									  
 ////////////////////////////////////////////////////////////////////////////////// 
  
-float pitch_zero, roll_zero, yaw_zero; 		//欧拉角零点
-short gyrox_zero, gyroy_zero, gyroz_zero;	//陀螺仪零点
+//float pitch_zero, roll_zero, yaw_zero; 		//欧拉角零点
+//short gyrox_zero, gyroy_zero, gyroz_zero;	//陀螺仪零点
 
 //初始化MPU6050
 //返回值:0,成功
@@ -25,9 +25,10 @@ short gyrox_zero, gyroy_zero, gyroz_zero;	//陀螺仪零点
 void MPU_Init(void)
 { 
 	u8 res;
-    u16 i;
-    float pitch_temp=0, roll_temp=0, yaw_temp=0; 		//欧拉角零点
-    short gyrox_temp=0, gyroy_temp=0, gyroz_temp=0;	//陀螺仪零点
+//    u16 i;
+//    float pitch_temp=0, roll_temp=0, yaw_temp=0; 		//欧拉角零点
+//    short gyrox_temp=0, gyroy_temp=0, gyroz_temp=0;	//陀螺仪零点
+    
 /*  AD0直接接地
     
     GPIO_InitTypeDef  GPIO_InitStructure;
@@ -41,9 +42,9 @@ void MPU_Init(void)
     GPIO_Init(GPIOA, &GPIO_InitStructure);					 //根据设定参数初始化GPIOA
 
 	GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable,ENABLE);//禁止JTAG,从而PA15可以做普通IO使用,否则PA15不能做普通IO!!!
-	
-	MPU_AD0_CTRL=0;			//控制MPU6050的AD0脚为低电平,从机地址为:0X68    */
-	
+	MPU_AD0_CTRL=0;			//控制MPU6050的AD0脚为低电平,从机地址为:0X68    
+		*/
+
 	MPU_IIC_Init();//初始化IIC总线
 	MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X80);	//复位MPU6050
     delay_ms(100);
@@ -61,26 +62,32 @@ void MPU_Init(void)
 		MPU_Write_Byte(MPU_PWR_MGMT1_REG,0X01);	//设置CLKSEL,PLL X轴为参考
 		MPU_Write_Byte(MPU_PWR_MGMT2_REG,0X00);	//加速度与陀螺仪都工作
 		MPU_Set_Rate(50);						//设置采样率为50Hz
+//        printf("initsucceed\n");
  	}
-    pitch_zero=0; roll_zero=0;  yaw_zero=0;  		//欧拉角零点
-    gyrox_zero=0; gyroy_zero=0; gyroz_zero=0; //陀螺仪零点
-    for(i = 0; i < 1000; ++i)//均值滤波，取1ms内均值
-    {
-        if(mpu_dmp_get_data(&pitch_temp, &roll_temp, &yaw_temp)==0)
-        { 
-            MPU_Get_Gyroscope(&gyrox_temp, &gyroy_temp, &gyroz_temp);	//得到陀螺仪数据
-            pitch_zero += pitch_temp;
-            gyroy_zero += gyroy_temp; 
-            gyroz_zero += gyroz_temp;
-            if(i > 0)
-            {
-                pitch_zero /= 2;
-                gyroy_zero /= 2;
-                gyroz_zero /= 2;
-            }
-            delay_ms(1);
-        }
-    }
+//    pitch_zero=0; roll_zero=0;  yaw_zero=0;  		//欧拉角零点
+//    gyrox_zero=0; gyroy_zero=0; gyroz_zero=0; //陀螺仪零点
+//    for(i = 0; i < 1000; ++i)//均值滤波，取1ms内均值
+//    {
+
+//        (mpu_dmp_get_data(&pitch_temp, &roll_temp, &yaw_temp));
+//        {
+//            printf("%4.2f once\n",pitch_zero);
+//            
+//            MPU_Get_Gyroscope(&gyrox_temp, &gyroy_temp, &gyroz_temp);	//得到陀螺仪数据
+//            pitch_zero += pitch_temp;
+//            gyroy_zero += gyroy_temp; 
+//            gyroz_zero += gyroz_temp;
+//            if(i > 0)
+//            {
+//                pitch_zero /= 2;
+//                gyroy_zero /= 2;
+//                gyroz_zero /= 2;
+//            }
+//            delay_ms(1);
+//            printf("%4.2f twice\n",pitch_zero);
+
+//        }
+//    }
 }
 //设置MPU6050陀螺仪传感器满量程范围
 //fsr:0,±250dps;1,±500dps;2,±1000dps;3,±2000dps
@@ -149,7 +156,7 @@ u8 MPU_Get_Gyroscope(short *gx,short *gy,short *gz)
 	res=MPU_Read_Len(MPU_ADDR,MPU_GYRO_XOUTH_REG,6,buf);
 	if(res==0)
 	{
-		*gx=((u16)buf[0]<<8)|buf[1];  
+//		*gx=((u16)buf[0]<<8)|buf[1];  
 		*gy=((u16)buf[2]<<8)|buf[3];  
 		*gz=((u16)buf[4]<<8)|buf[5];
 	} 	

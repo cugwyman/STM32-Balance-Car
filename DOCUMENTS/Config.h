@@ -12,5 +12,5 @@
 #define STOP
 //#define TEST_MODE
 #define DynamicPreSight
-
+//#define SendPicture
 #endif
