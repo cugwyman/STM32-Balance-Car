@@ -35,19 +35,21 @@ void TIMER_Init(u16 arr,u16 psc)
 //定时器3中断服务程序
 void TIM5_IRQHandler(void)   //TIM5中断,函数名不能改，在startup_stm32f10x_hd.s文件确定了
 {
+    
 	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)  //检查TIM5更新中断发生与否
 	{
         static u8 cnt = 0;
         
-        get_mpu();
-        get_pwm();
-        motor_proc(left_pwm, right_pwm);
-
+//        get_mpu();
+//        get_pwm();
+//        motor_proc(left_pwm, right_pwm);
+        
         cnt++;
         if(cnt % 25 == 0)	   //150ms扫描一次
         {
             cnt = 0;
             KeyScan();
+           
         }
         TIM_ClearITPendingBit(TIM5, TIM_IT_Update);  //清除TIMx更新中断标志 
 	}

@@ -49,7 +49,10 @@ void PWM_Init(u16 arr,u16 psc)
 	TIM_OC4PreloadConfig(TIM3, TIM_OCPreload_Enable);  //使能TIMx在CCR4上的预装载寄存器
 
 	TIM_ARRPreloadConfig(TIM3, ENABLE); //使能TIMx在ARR上的预装载寄存器
-	
+    
+	TIM_SetCompare1(TIM3,0);	//tm3 ch1
+    TIM_SetCompare2(TIM3,0);    //tm3 ch2
+
 	TIM_Cmd(TIM3, ENABLE);  //使能TIMx外设
  
 

@@ -1,5 +1,6 @@
 #include "sys.h"
 #include "usart.h"	  
+#include "oled.h"
 ////////////////////////////////////////////////////////////////////////////////// 	 
 //如果使用ucos,则包括下面的头文件即可.
 #if SYSTEM_SUPPORT_OS
@@ -45,7 +46,7 @@ struct __FILE
 
 FILE __stdout;       
 //定义_sys_exit()以避免使用半主机模式    
-_sys_exit(int x) 
+void _sys_exit(int x) 
 { 
 	x = x; 
 } 
@@ -85,6 +86,9 @@ u8 USART_RX_BUF[USART_REC_LEN];     //接收缓冲,最大USART_REC_LEN个字节.
 //bit14，	接收到0x0d
 //bit13~0，	接收到的有效字节数目
 u16 USART_RX_STA=0;       //接收状态标记	  
+u16 BUF ;
+unsigned char sign, counter = 0;
+u16 Temp[3], x_label, y_label;
   
 void uart_init(u32 bound){
   //GPIO端口设置
@@ -128,33 +132,64 @@ void uart_init(u32 bound){
 }
 
 void USART1_IRQHandler(void)                	//串口1中断服务程序
-	{
+{
 	u8 Res;
+    u16 buff_temp = 0;
+
 #if SYSTEM_SUPPORT_OS 		//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntEnter();    
 #endif
 	if(USART_GetITStatus(USART1, USART_IT_RXNE) != RESET)  //接收中断(接收到的数据必须是0x0d 0x0a结尾)
-		{
-		Res =USART_ReceiveData(USART1);	//读取接收到的数据
-		
-		if((USART_RX_STA&0x8000)==0)//接收未完成
-			{
-			if(USART_RX_STA&0x4000)//接收到了0x0d
-				{
-				if(Res!=0x0a)USART_RX_STA=0;//接收错误,重新开始
-				else USART_RX_STA|=0x8000;	//接收完成了 
-				}
-			else //还没收到0X0D
-				{	
-				if(Res==0x0d)USART_RX_STA|=0x4000;
-				else
-					{
-					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
-					USART_RX_STA++;
-					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
-					}		 
-				}
-			}   		 
+	{
+//        buff_temp = USART_ReceiveData(USART1);	
+//        if(buff_temp)
+//        BUF = buff_temp;
+//        sign=1;
+ 
+//收坐标轴        
+        Temp[counter] = USART_ReceiveData(USART1);   //接收数据
+        if(counter == 0 && Temp[0] != 0x55) return;      //第 0 号数据不是帧头，跳过
+        counter++; 
+        if(counter==2) //接收到 11 个数据
+        { 
+            x_label = Temp[1];
+            y_label = Temp[2];            
+            counter=0; //重新赋值，准备下一帧数据的接收
+            sign=1;
+        }
+        
+/*发坐标轴
+    Temp[0] = 0x55;
+    Temp[1] = 11;
+    Temp[2] = 22;
+    for(int i = 0; i < 3; i++)
+    {
+        USART_SendData(USART2, Temp[i]);
+    }       */
+
+//		Res =USART_ReceiveData(USART1);	//读取接收到的数据
+//		
+//		if((USART_RX_STA&0x8000)==0)//接收未完成
+//			{
+//			if(USART_RX_STA&0x4000)//接收到了0x0d
+//				{
+//                    if(Res!=0x0a)USART_RX_STA=0;//接收错误,重新开始
+//                    else 
+//                    {
+//                        USART_RX_STA|=0x8000;	//接收完成了 
+//                    }
+//				}
+//			else //还没收到0X0D
+//				{	
+//				if(Res==0x0d)USART_RX_STA|=0x4000;
+//				else
+//					{
+//					USART_RX_BUF[USART_RX_STA&0X3FFF]=Res ;
+//					USART_RX_STA++;
+//					if(USART_RX_STA>(USART_REC_LEN-1))USART_RX_STA=0;//接收数据错误,重新开始接收	  
+//					}		 
+//				}
+//			}   		 
      } 
 #if SYSTEM_SUPPORT_OS 	//如果SYSTEM_SUPPORT_OS为真，则需要支持OS.
 	OSIntExit();  											 

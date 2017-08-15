@@ -20,7 +20,7 @@ void KeyScan(void)
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_0) == KEY_PRESSED) //K1
 	{	
 //        OLED_Clear();
-        printf("add\n");
+//        printf("add\n");
 		switch(Item)
 		{
 			case 1:
@@ -62,7 +62,7 @@ void KeyScan(void)
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_1) == KEY_PRESSED) //K2
 	{
 //        OLED_Clear();
-        printf("sub\n");
+//        printf("sub\n");
 		switch(Item)
 		{
 			case 1:
@@ -105,7 +105,7 @@ void KeyScan(void)
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_2) == KEY_PRESSED) //K3
 	{
 //        OLED_Clear();
-        printf("last\n");
+//        printf("last\n");
         Param--;
         if(Param<1)		//共有3行
             Param = 3;
@@ -150,7 +150,7 @@ void KeyScan(void)
     if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_3) == KEY_PRESSED)  //K4
 	{
 //        OLED_Clear();
-        printf("next\n");
+//        printf("next\n");
         Param++;
         if(Param>3)		//共有3行
             Param = 1;
@@ -159,7 +159,7 @@ void KeyScan(void)
 	if(GPIO_ReadInputDataBit(GPIOE,GPIO_Pin_5) == KEY_PRESSED)  //K4
 	{
         OLED_Clear();
-        printf("another\n");
+//        printf("another\n");
 		Item++;
 		if(Item>6)		//共有7项
 			Item = 0;
